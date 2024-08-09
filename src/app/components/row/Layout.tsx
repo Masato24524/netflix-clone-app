@@ -1,15 +1,40 @@
 import React from 'react'
 import { Movie } from "../../type";
+import YouTube from 'react-youtube';
 
 
 interface LayoutProps {
     title: string;
     movies: Movie[];
     isLargeRow: boolean;
+    trialUrl?: string | null;
+    handleClick: (movie: Movie) => void;
 }
 
-export const Layout = ({ title, movies, isLargeRow }: LayoutProps) => {
+interface Options {
+    height: string;
+    width: string;
+    playerVars: {
+        autoplay: 0 | 1 | number;
+    };
+}
+
+export const Layout = ({ 
+    title, 
+    movies, 
+    isLargeRow,
+    trialUrl,
+    handleClick, 
+}: LayoutProps) => {
     const image_url = "https://image.tmdb.org/t/p/original/";
+
+    const opts: Options = {
+        height: "390",
+        width: "640",
+        playerVars: {
+            autoplay: 1,
+        },
+    };
 
     return (
         <div className='ml-5 text-white'>
@@ -27,10 +52,14 @@ export const Layout = ({ title, movies, isLargeRow }: LayoutProps) => {
                         src={`${image_url}${
                             isLargeRow ? movie.poster_path : movie.backdrop_path
                         }`}
+
+                        onClick={() => handleClick(movie)}
                         alt={movie.name} 
                     />
                 ))}
             </div>
+
+            {trialUrl && <YouTube videoId={trialUrl} opts={opts} />}
         </div>
     );
 };
